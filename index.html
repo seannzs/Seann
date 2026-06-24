@@ -47,7 +47,7 @@
                         0 0 30px rgba(0, 255, 240, 0.03);
             opacity: 0;
             transform: translateY(20px);
-            will-change: transform, opacity; /* Optimalisasi performa HP */
+            will-change: transform, opacity;
         }
 
         .header-zone {
@@ -72,7 +72,6 @@
             font-size: 14px;
         }
 
-        /* Form Grid yang Ringan */
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -120,7 +119,6 @@
             cursor: pointer;
         }
 
-        /* Buttons */
         .btn {
             width: 100%;
             padding: 14px;
@@ -157,7 +155,6 @@
             box-shadow: none !important;
         }
 
-        /* Loading Area */
         .loading-wrapper {
             display: none;
             text-align: center;
@@ -189,7 +186,6 @@
             font-size: 14px;
         }
 
-        /* Output Area */
         .output-container {
             margin-top: 30px;
             display: none;
@@ -243,7 +239,6 @@
             text-decoration: none;
         }
 
-        /* Toast Notifications (Ringan & Cepat) */
         .toast-container {
             position: fixed;
             top: 20px;
@@ -273,7 +268,6 @@
         .toast.error { background: #e74c3c; }
         .toast.info { background: #1f293d; border: 1px solid var(--sea-blue); }
 
-        /* Responsive Mobile Layout */
         @media (max-width: 600px) {
             .container { padding: 20px 15px; }
             .form-grid { grid-template-columns: 1fr; gap: 12px; }
@@ -341,7 +335,6 @@
 </div>
 
 <script>
-    // Fade in pakai durasi pas & optimalisasi transisi linear/quad
     window.addEventListener('DOMContentLoaded', () => {
         gsap.to("#mainContainer", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" });
     });
@@ -359,7 +352,6 @@
         toast.innerHTML = `<div>${icon}</div> <div>${message}</div>`;
         container.appendChild(toast);
 
-        // Animasi transisi murni tanpa bounce berat agar mulus di HP
         gsap.to(toast, { translateX: '0%', duration: 0.4, ease: "power2.out" });
 
         setTimeout(() => {
@@ -416,7 +408,7 @@
         1. JANGAN gunakan elemen fiksi ilmiah, fantasi, sihir, superpower, atau game lain. Cerita harus 100% kehidupan nyata manusia biasa.
         2. Cerita WAJIB terdiri dari MINIMAL 3 PARAGRAF PANJANG (Total minimal 300-400 kata).
         3. Berikan 5 spasi di awal setiap paragraf agar menjorok ke dalam (indentasi).
-        4. Tulis HANYA ceritanya saja, tanpa kata pengantar, tanpa judul tambahan, dan tanpa tanda petik di awal/akhir cerita.
+        4. Tulis HANYA ceritanya saja, tanpa kata pengantar, tanpa judul tambahan, tanpa format JSON, dan tanpa tanda petik di awal/akhir cerita.
         STRUKTUR ALUR CERITA:
         - Paragraf 1 (Masa Kecil): Ceritakan kehidupan awal ${fullName.replace('_', ' ')} saat lahir di ${place} pada tanggal ${day}/${month}/${year}. Bagaimana lingkungan keluarganya dan sifat masa kecilnya.
         - Paragraf 2 (Titik Balik): Mengapa dia memutuskan pergi dari ${place}? Berikan alasan realistis (masalah ekonomi, ingin mandiri, mencari tantangan, atau kabur dari masa lalu) yang membuatnya nekat merantau ke kota Los Santos.
@@ -424,24 +416,29 @@
         Detail Alur Tambahan dari User (Opsional): ${infoTambahan ? infoTambahan : 'Tidak ada'}.`;
 
         try {
-            const response = await fetch("https://text.pollinations.ai/", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    messages: [
-                        { role: "system", content: "Kamu adalah asisten penulis Character Story GTA SAMP yang realistis." },
-                        { role: "user", content: promptAI }
-                    ],
-                    model: "openai"
-                })
-            });
+            const response = await fetch(`https://text.pollinations.ai/${encodeURIComponent(promptAI)}?model=openai&system=${encodeURIComponent("Kamu adalah asisten penulis cerita SAMP JGRP. Keluarkan HASIL CERITA NYATA SAJA, dilarang merespon dengan format JSON, code block, atau teks mentah lainnya.")}`);
 
             if (!response.ok) throw new Error("Server sibuk.");
             
-            let aiStory = await response.text();
-            aiStory = aiStory.replace(/^["'`]|["'`]$/g, '').trim();
+            let rawData = await response.text();
+            let cleanedStory = "";
 
-            const finalOutput = `Character: ${fullName}\nOrigin: ${place}\nStory Character Born: ${formatCSDate}\n\n--- Character Story ---\n\n${aiStory}`;
+            try {
+                const parsedJson = JSON.parse(rawData);
+                if (parsedJson.content) {
+                    cleanedStory = parsedJson.content;
+                } else if (parsedJson.choices && parsedJson.choices[0].message.content) {
+                    cleanedStory = parsedJson.choices[0].message.content;
+                } else {
+                    cleanedStory = rawData;
+                }
+            } catch (e) {
+                cleanedStory = rawData;
+            }
+
+            cleanedStory = cleanedStory.replace(/^["'`]|["'`]$/g, '').trim();
+
+            const finalOutput = `Character: ${fullName}\nOrigin: ${place}\nStory Character Born: ${formatCSDate}\n\n--- Character Story ---\n\n${cleanedStory}`;
 
             document.getElementById('output').innerText = finalOutput;
             

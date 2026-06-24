@@ -3,148 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GTA:SAMP AI Character Story Generator</title>
+    <title>Premium GTA:SAMP AI Character Story Generator</title>
+    <!-- Google Fonts untuk font yang lebih modern -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- GSAP untuk Animasi Smooth -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
         :root {
-            --bg-color: #0d1117;
-            --container-bg: rgba(22, 33, 62, 0.7);
-            --accent-color: #00fff0;
-            --accent-purple: #8a2be2;
-            --text-color: #e2e8f0;
-            --input-bg: #121225;
-            --border-color: #1f4068;
+            --bg-dark: #060913;
+            --navy-deep: #0b1126;
+            --sea-blue: #00fff0;
+            --neon-purple: #8a2be2;
+            --text-main: #f1f5f9;
+            --text-muted: #64748b;
+            --glass-bg: rgba(11, 17, 38, 0.55);
+            --glass-border: rgba(0, 255, 240, 0.15);
+            --input-bg: rgba(6, 9, 19, 0.6);
+        }
+
+        * {
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: radial-gradient(circle at center, #1a1a3a 0%, var(--bg-color) 100%);
-            color: var(--text-color);
+            background: radial-gradient(circle at 10% 20%, rgba(138, 43, 226, 0.15) 0%, transparent 40%),
+                        radial-gradient(circle at 90% 80%, rgba(0, 255, 240, 0.12) 0%, transparent 45%),
+                        var(--bg-dark);
+            color: var(--text-main);
             margin: 0;
-            padding: 20px;
+            padding: 40px 20px;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-sizing: border-box;
             overflow-x: hidden;
         }
 
+        /* Ambient Glow di belakang container */
+        .ambient-glow {
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(45deg, var(--sea-blue), var(--neon-purple));
+            filter: blur(150px);
+            opacity: 0.15;
+            pointer-events: none;
+            z-index: 0;
+        }
+
         .container {
+            position: relative;
+            z-index: 1;
             width: 100%;
-            max-width: 750px;
-            background: var(--container-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            padding: 40px;
-            border-radius: 16px;
-            border: 1px solid rgba(0, 255, 240, 0.2);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            max-width: 800px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 50px;
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
             opacity: 0;
-            transform: translateY(30px);
+            transform: translateY(40px);
+        }
+
+        /* Header Style */
+        .header-zone {
+            text-align: center;
+            margin-bottom: 40px;
         }
 
         h2 {
-            text-align: center;
-            color: var(--accent-color);
-            margin-top: 0;
-            margin-bottom: 5px;
+            font-size: 32px;
+            font-weight: 800;
+            margin: 0 0 10px 0;
+            background: linear-gradient(135deg, #fff 30%, var(--sea-blue) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(0, 255, 240, 0.5);
+            letter-spacing: 1.5px;
         }
 
         p.subtitle {
-            text-align: center;
-            color: #8c92ac;
-            margin-bottom: 30px;
-            font-size: 14px;
+            color: var(--text-muted);
+            margin: 0;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* Form Controls */
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-bottom: 24px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
         }
 
         label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: var(--accent-color);
-            font-size: 14px;
-            letter-spacing: 0.5px;
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--sea-blue);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         input[type="text"], input[type="date"] {
             width: 100%;
-            padding: 14px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            background-color: var(--input-bg);
+            padding: 16px 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            background: var(--input-bg);
             color: #fff;
-            box-sizing: border-box;
             font-size: 15px;
-            transition: all 0.3s ease;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
         }
 
         input[type="text"]:focus, input[type="date"]:focus {
             outline: none;
-            border-color: var(--accent-color);
-            box-shadow: 0 0 12px rgba(0, 255, 240, 0.3);
-            background-color: #161630;
+            border-color: var(--sea-blue);
+            box-shadow: 0 0 20px rgba(0, 255, 240, 0.2), inset 0 2px 4px rgba(0,0,0,0.1);
+            background: rgba(11, 17, 38, 0.8);
         }
 
-        button {
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Beautiful Custom Date Input */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            filter: invert(1) sepia(1) saturate(5) hue-rotate(135deg);
+            cursor: pointer;
+        }
+
+        /* Action Buttons */
+        .btn {
             width: 100%;
-            padding: 14px;
+            padding: 16px;
             border: none;
-            border-radius: 8px;
-            font-weight: bold;
+            border-radius: 12px;
+            font-weight: 700;
             font-size: 16px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-            margin-top: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
         .btn-generate { 
-            background: linear-gradient(45deg, var(--accent-color), var(--accent-purple)); 
-            color: #fff; 
-            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-            box-shadow: 0 4px 15px rgba(0, 255, 240, 0.2);
+            background: linear-gradient(135deg, var(--sea-blue), var(--neon-purple)); 
+            color: #060913; 
+            box-shadow: 0 8px 25px rgba(0, 255, 240, 0.25);
+            margin-top: 10px;
         }
         
         .btn-generate:hover:not(:disabled) {
-            filter: brightness(1.1);
-            box-shadow: 0 6px 20px rgba(0, 255, 240, 0.4);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 255, 240, 0.45);
+            color: #fff;
+        }
+
+        .btn-generate:active:not(:disabled) {
+            transform: translateY(-1px);
         }
 
         button:disabled { 
-            background: #333 !important; 
+            background: #1e293b !important; 
             cursor: not-allowed; 
-            color: #aaa;
-            box-shadow: none;
+            color: var(--text-muted) !important;
+            box-shadow: none !important;
+            border: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* Loading Animation */
+        /* Loading / Processing Area */
         .loading-wrapper {
             display: none;
             text-align: center;
-            margin: 25px 0;
+            margin: 35px 0;
+            padding: 20px;
+            background: rgba(255, 188, 0, 0.03);
+            border-radius: 16px;
+            border: 1px dashed rgba(255, 188, 0, 0.2);
         }
 
         .spinner {
-            width: 50px;
-            height: 50px;
-            border: 5px solid rgba(0, 255, 240, 0.1);
-            border-top: 5px solid var(--accent-color);
+            width: 44px;
+            height: 44px;
+            border: 4px solid rgba(0, 255, 240, 0.1);
+            border-top: 4px solid var(--sea-blue);
             border-radius: 50%;
-            margin: 0 auto 15px;
-            animation: spin 1s linear infinite;
+            margin: 0 auto 16px;
+            animation: spin 0.8s linear infinite;
         }
 
         @keyframes spin {
@@ -154,190 +218,226 @@
 
         .loading-text {
             color: #ffbc00;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 15px;
             letter-spacing: 0.5px;
         }
 
-        /* Output Section */
+        /* Premium Output Layout */
         .output-container {
-            margin-top: 35px;
+            margin-top: 45px;
             display: none;
             opacity: 0;
             transform: translateY(20px);
         }
 
+        .output-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
         #output {
-            background: #090d16;
-            border-left: 4px solid var(--accent-color);
-            padding: 25px;
+            background: #04060d;
+            border: 1px solid rgba(255,255,255,0.05);
+            border-left: 4px solid var(--sea-blue);
+            padding: 30px;
             white-space: pre-wrap;
-            border-radius: 8px;
-            font-family: 'Times New Roman', Times, serif;
-            font-size: 16px;
-            line-height: 1.7;
-            color: #f1f5f9;
+            border-radius: 12px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 15px;
+            line-height: 1.8;
+            color: #e2e8f0;
             text-align: justify;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
-            max-height: 400px;
+            box-shadow: inset 0 4px 20px rgba(0,0,0,0.8);
+            max-height: 450px;
             overflow-y: auto;
+        }
+
+        /* Custom Scrollbar untuk Output */
+        #output::-webkit-scrollbar {
+            width: 8px;
+        }
+        #output::-webkit-scrollbar-track {
+            background: #04060d;
+            border-radius: 12px;
+        }
+        #output::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+        }
+        #output::-webkit-scrollbar-thumb:hover {
+            background: var(--sea-blue);
         }
 
         .btn-group {
             display: flex;
-            gap: 12px;
-            margin-top: 20px;
+            gap: 16px;
+            margin-top: 25px;
         }
 
-        .btn-copy { background-color: #2ecc71; color: #fff; }
-        .btn-download { background-color: #3498db; color: #fff; }
-        .btn-copy:hover { box-shadow: 0 4px 12px rgba(46, 204, 113, 0.3); transform: translateY(-2px); }
-        .btn-download:hover { box-shadow: 0 4px 12px rgba(52, 152, 219, 0.3); transform: translateY(-2px); }
+        .btn-copy { background: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.3); }
+        .btn-download { background: rgba(52, 152, 219, 0.15); color: #3498db; border: 1px solid rgba(52, 152, 219, 0.3); }
+        
+        .btn-copy:hover { background: #2ecc71; color: #fff; box-shadow: 0 8px 20px rgba(46, 204, 113, 0.3); transform: translateY(-2px); }
+        .btn-download:hover { background: #3498db; color: #fff; box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3); transform: translateY(-2px); }
 
-        .pastebin-link {
+        .pastebin-box {
             display: none;
             opacity: 0;
             margin-top: 20px;
             text-align: center;
-            background: rgba(0,0,0,0.4);
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px dashed rgba(255,255,255,0.1);
+            background: rgba(0, 255, 240, 0.05);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px dashed rgba(0, 255, 240, 0.2);
+            font-size: 14px;
         }
 
-        .pastebin-link a {
-            color: var(--accent-color);
-            font-weight: bold;
+        .pastebin-box a {
+            color: var(--sea-blue);
+            font-weight: 700;
             text-decoration: none;
-            transition: 0.2s;
+            box-shadow: 0 2px 0 rgba(0, 255, 240, 0.2);
+            transition: all 0.2s;
         }
 
-        .pastebin-link a:hover { text-decoration: underline; text-shadow: 0 0 8px var(--accent-color); }
+        .pastebin-box a:hover { text-shadow: 0 0 10px var(--sea-blue); box-shadow: 0 2px 0 var(--sea-blue); }
 
-        /* --- SITEM NOTIFIKASI TOAST (ANIMASI GSAP) --- */
+        /* --- NOTIFIKASI TOAST DENGAN TAMPILAN GLASS --- */
         .toast-container {
             position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
+            top: 25px;
+            right: 25px;
+            z-index: 10000;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .toast {
-            min-width: 280px;
-            padding: 16px;
-            border-radius: 8px;
+            min-width: 320px;
+            padding: 18px 24px;
+            border-radius: 14px;
             color: #fff;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 14px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 14px;
             transform: translateX(120%);
-            border-left: 5px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
-        .toast.success { background: #2ecc71; }
-        .toast.error { background: #e74c3c; }
-        .toast.info { background: #f39c12; }
+        .toast.success { background: rgba(46, 204, 113, 0.85); border: 1px solid rgba(46, 204, 113, 0.5); }
+        .toast.error { background: rgba(231, 76, 60, 0.85); border: 1px solid rgba(231, 76, 60, 0.5); }
+        .toast.info { background: rgba(11, 17, 38, 0.9); border: 1px solid var(--sea-blue); }
 
-        /* Responsivitas Layar Ponsel */
-        @media (max-width: 600px) {
-            body { padding: 10px; }
-            .container { padding: 20px; border-radius: 12px; }
-            .btn-group { flex-direction: column; gap: 8px; }
-            #output { padding: 15px; font-size: 15px; }
-            .toast-container { right: 10px; left: 10px; top: 10px; }
+        /* Mobile Optimization */
+        @media (max-width: 768px) {
+            body { padding: 20px 10px; }
+            .container { padding: 30px 20px; border-radius: 20px; }
+            .form-grid { grid-template-columns: 1fr; gap: 16px; }
+            .form-group.full-width { grid-column: span 1; }
+            h2 { font-size: 24px; }
+            .btn-group { flex-direction: column; gap: 10px; }
+            .toast-container { right: 15px; left: 15px; top: 15px; }
             .toast { min-width: auto; }
         }
     </style>
 </head>
 <body>
 
-<!-- Kontainer Notifikasi -->
+<div class="ambient-glow"></div>
+
+<!-- Container Toast -->
 <div class="toast-container" id="toastContainer"></div>
 
 <div class="container" id="mainContainer">
-    <h2>Character Story AI</h2>
-    <p class="subtitle">SAMP Auto-Generator dengan animasi halus & notifikasi responsif</p>
-
-    <div class="form-group">
-        <label for="charName">Nama Karakter (Gunakan Underscore '_')</label>
-        <input type="text" id="charName" placeholder="Contoh: Carl_Johnson" required>
-    </div>
-    
-    <div class="form-group">
-        <label for="birthPlace">Tempat Lahir</label>
-        <input type="text" id="birthPlace" placeholder="Contoh: Brooklyn, USA" required>
-    </div>
-    
-    <div class="form-group">
-        <label for="birthDate">Tanggal Lahir</label>
-        <input type="date" id="birthDate" required>
+    <div class="header-zone">
+        <h2>Character Story Generator</h2>
+        <p class="subtitle">Buat alur cerita forum JGRP / SAMP secara instan & profesional</p>
     </div>
 
-    <div class="form-group">
-        <label for="promptTambahan">Detail Cerita Tambahan (Opsional)</label>
-        <input type="text" id="promptTambahan" placeholder="Contoh: Suka balapan, merantau karena miskin, mantan napi">
+    <div class="form-grid">
+        <div class="form-group">
+            <label for="charName">Nama Karakter</label>
+            <input type="text" id="charName" placeholder="Contoh: Carl_Johnson" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="birthPlace">Tempat Lahir</label>
+            <input type="text" id="birthPlace" placeholder="Contoh: Brooklyn, USA" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="birthDate">Tanggal Lahir</label>
+            <input type="date" id="birthDate" required>
+        </div>
+
+        <div class="form-group">
+            <label for="promptTambahan">Detail Tambahan (Opsional)</label>
+            <input type="text" id="promptTambahan" placeholder="Contoh: Miskin, ahli mekanik, kabur dari utang">
+        </div>
     </div>
     
-    <button class="btn-generate" id="btnGen" onclick="generateStoryWithAnim()">
-        <span>Buat Cerita Sekarang ✨</span>
+    <button class="btn btn-generate" id="btnGen" onclick="generateStoryWithAnim()">
+        <span>Generate Character Story ✨</span>
     </button>
     
     <div class="loading-wrapper" id="loadingArea">
         <div class="spinner"></div>
-        <div class="loading-text">AI sedang merangkai cerita unik untukmu...</div>
+        <div class="loading-text">MENGHUBUNGKAN KE AI ENGINE... MOHON TUNGGU</div>
     </div>
 
     <div class="output-container" id="outputContainer">
-        <label style="font-size: 16px; margin-bottom: 10px;">Hasil Format Forum:</label>
+        <div class="output-header">
+            <label style="font-size: 14px; font-weight: 700; color: var(--sea-blue); text-transform: uppercase;">Ready to Paste (Format Forum):</label>
+        </div>
         <div id="output"></div>
         
         <div class="btn-group">
-            <button class="btn-copy" onclick="copyText()">📋 Salin Teks</button>
-            <button class="btn-download" onclick="downloadTxt()">💾 Unduh .TXT</button>
+            <button class="btn btn-copy" onclick="copyText()">📋 Copy Story Text</button>
+            <button class="btn btn-download" onclick="downloadTxt()">💾 Download .TXT File</button>
         </div>
 
-        <div class="pastebin-link" id="pastebinLink">
-            Teks berhasil disalin! Kirim ke <a href="https://pastebin.com" target="_blank">Pastebin Resmi</a> (Tekan CTRL + V)
+        <div class="pastebin-box" id="pastebinBox">
+            Teks tersalin! Langsung drop & buat paste baru di <a href="https://pastebin.com" target="_blank">Pastebin Resmi</a> (Gunakan CTRL + V)
         </div>
     </div>
 </div>
 
 <script>
-    // Animasi Loading Awal saat Web Dibuka
+    // Fade in Container Utama dengan GSAP
     window.addEventListener('DOMContentLoaded', () => {
-        gsap.to("#mainContainer", { opacity: 1, y: 0, duration: 0.8, ease: "power3.out" });
+        gsap.to("#mainContainer", { opacity: 1, y: 0, duration: 1, ease: "power4.out" });
     });
 
-    // FUNGSI ANIMASI NOTIFIKASI (TOAST SYSTEM)
+    // Toast Notification System
     function showNotification(message, type = 'info') {
         const container = document.getElementById('toastContainer');
         const toast = document.createElement('div');
         toast.className = `toast ${type}`;
         
-        // Pilih emoji berdasarkan jenis notifikasi
         let icon = '🔔';
-        if (type === 'success') icon = '✅';
-        if (type === 'error') icon = '❌';
-        if (type === 'info') icon = '⏳';
+        if (type === 'success') icon = '⚡';
+        if (type === 'error') icon = '⚠️';
+        if (type === 'info') icon = '🛰️';
 
-        toast.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+        toast.innerHTML = `<div>${icon}</div> <div>${message}</div>`;
         container.appendChild(toast);
 
-        // Animasi Masuk (Slide dari kanan)
-        gsap.to(toast, { translateX: '0%', duration: 0.5, ease: "back.out(1.2)" });
+        // Slide in dari kanan dengan bounce effect cerdas
+        gsap.to(toast, { translateX: '0%', duration: 0.6, ease: "back.out(1.1)" });
 
-        // Auto-close setelah 4 detik dengan animasi keluar
         setTimeout(() => {
-            gsap.to(toast, { opacity: 0, scale: 0.8, duration: 0.4, ease: "power2.in", onComplete: () => {
+            gsap.to(toast, { opacity: 0, x: 50, duration: 0.4, ease: "power3.in", onComplete: () => {
                 toast.remove();
             }});
-        }, 4000);
+        }, 4500);
     }
 
     async function generateStoryWithAnim() {
@@ -347,7 +447,7 @@
         const infoTambahan = document.getElementById('promptTambahan').value.trim();
 
         if(!fullName || !place || !dateInput) {
-            showNotification("Harap lengkapi formulir terlebih dahulu!", "error");
+            showNotification("Isi semua kolom wajib sebelum digenerate!", "error");
             return;
         }
 
@@ -360,14 +460,12 @@
         const btn = document.getElementById('btnGen');
         const loadingArea = document.getElementById('loadingArea');
         const outputContainer = document.getElementById('outputContainer');
-        const pastebinLink = document.getElementById('pastebinLink');
+        const pastebinBox = document.getElementById('pastebinBox');
 
-        // Reset & Sembunyikan output lama
-        pastebinLink.style.display = 'none';
+        pastebinBox.style.display = 'none';
         btn.disabled = true;
         
-        // Picu notifikasi bahwa proses dimulai
-        showNotification("Memulai pengerjaan cerita via AI...", "info");
+        showNotification("Sedang memproses prompt ke server AI...", "info");
 
         if(outputContainer.style.display === 'block') {
             gsap.to(outputContainer, { opacity: 0, y: 15, duration: 0.3, onComplete: () => {
@@ -380,7 +478,7 @@
 
         function startLoading() {
             loadingArea.style.display = 'block';
-            gsap.fromTo(loadingArea, { opacity: 0, scale: 0.9 }, { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.7)" });
+            gsap.fromTo(loadingArea, { opacity: 0, scale: 0.98 }, { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" });
         }
 
         const promptAI = `Kamu adalah penulis cerita profesional untuk forum GTA SAMP Roleplay (seperti JGRP).
@@ -409,7 +507,7 @@
                 })
             });
 
-            if (!response.ok) throw new Error("Server AI sedang sibuk.");
+            if (!response.ok) throw new Error("Server gagal merespon.");
             
             let aiStory = await response.text();
             aiStory = aiStory.replace(/^["'`]|["'`]$/g, '').trim();
@@ -421,15 +519,14 @@
             gsap.to(loadingArea, { opacity: 0, duration: 0.3, onComplete: () => {
                 loadingArea.style.display = 'none';
                 outputContainer.style.display = 'block';
-                gsap.fromTo(outputContainer, { opacity: 0, y: 30 }, { opacity: 1, y: 0, duration: 0.6, ease: "power2.out" });
+                gsap.fromTo(outputContainer, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" });
                 outputContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
                 
-                // Picu notifikasi sukses
-                showNotification("Character Story berhasil dibuat!", "success");
+                showNotification("Character Story sukses di-generate!", "success");
             }});
 
         } catch (error) {
-            showNotification("Koneksi bermasalah: " + error.message, "error");
+            showNotification("Gagal memuat cerita: " + error.message, "error");
             loadingArea.style.display = 'none';
         } finally {
             btn.disabled = false;
@@ -438,34 +535,6 @@
 
     function copyText() {
         const textToCopy = document.getElementById('output').innerText;
-        const pastebinLink = document.getElementById('pastebinLink');
+        const pastebinBox = document.getElementById('pastebinBox');
         
-        navigator.clipboard.writeText(textToCopy).then(() => {
-            pastebinLink.style.display = 'block';
-            gsap.fromTo(pastebinLink, { opacity: 0, scale: 0.95 }, { opacity: 1, scale: 1, duration: 0.4, ease: "power2.out" });
-            
-            // Picu notifikasi sukses salin
-            showNotification("Cerita berhasil disalin ke clipboard!", "success");
-        }).catch(err => {
-            showNotification("Gagal menyalin teks.", "error");
-        });
-    }
-
-    function downloadTxt() {
-        const textToCopy = document.getElementById('output').innerText;
-        const name = document.getElementById('charName').value.trim() || "character_story";
-        const blob = new Blob([textToCopy], { type: "text/plain;charset=utf-8" });
-        const link = document.createElement("a");
-        
-        link.href = URL.createObjectURL(blob);
-        link.download = `${name}_CS.txt`;
-        link.click();
-        URL.revokeObjectURL(link.href);
-        
-        // Picu notifikasi berhasil unduh
-        showNotification("File .txt berhasil diunduh!", "success");
-    }
-</script>
-
-</body>
-    </html>
+        navigator.clipboard.writeText(tex

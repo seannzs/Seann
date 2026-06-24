@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium GTA:SAMP AI Character Story Generator</title>
-    <!-- Google Fonts untuk font yang lebih modern -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- GSAP untuk Animasi Smooth -->
+    <title>SAMP AI Character Story Generator</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <!-- GSAP Smooth Animation -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <style>
         :root {
-            --bg-dark: #060913;
-            --navy-deep: #0b1126;
+            --bg-dark: #070b19;
+            --container-bg: #0f162e;
             --sea-blue: #00fff0;
             --neon-purple: #8a2be2;
             --text-main: #f1f5f9;
             --text-muted: #64748b;
-            --glass-bg: rgba(11, 17, 38, 0.55);
-            --glass-border: rgba(0, 255, 240, 0.15);
-            --input-bg: rgba(6, 9, 19, 0.6);
+            --input-bg: #060914;
+            --border-color: rgba(0, 255, 240, 0.15);
         }
 
         * {
@@ -27,78 +26,58 @@
         }
 
         body {
-            background: radial-gradient(circle at 10% 20%, rgba(138, 43, 226, 0.15) 0%, transparent 40%),
-                        radial-gradient(circle at 90% 80%, rgba(0, 255, 240, 0.12) 0%, transparent 45%),
-                        var(--bg-dark);
+            background: linear-gradient(135deg, #070b1a 0%, #0d1530 100%);
             color: var(--text-main);
             margin: 0;
-            padding: 40px 20px;
+            padding: 20px 15px;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow-x: hidden;
-        }
-
-        /* Ambient Glow di belakang container */
-        .ambient-glow {
-            position: absolute;
-            width: 400px;
-            height: 400px;
-            background: linear-gradient(45deg, var(--sea-blue), var(--neon-purple));
-            filter: blur(150px);
-            opacity: 0.15;
-            pointer-events: none;
-            z-index: 0;
         }
 
         .container {
-            position: relative;
-            z-index: 1;
             width: 100%;
-            max-width: 800px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 50px;
-            border-radius: 24px;
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            max-width: 760px;
+            background: var(--container-bg);
+            padding: 30px 25px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 
+                        0 0 30px rgba(0, 255, 240, 0.03);
             opacity: 0;
-            transform: translateY(40px);
+            transform: translateY(20px);
+            will-change: transform, opacity; /* Optimalisasi performa HP */
         }
 
-        /* Header Style */
         .header-zone {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         h2 {
-            font-size: 32px;
+            font-size: 26px;
             font-weight: 800;
-            margin: 0 0 10px 0;
-            background: linear-gradient(135deg, #fff 30%, var(--sea-blue) 100%);
+            margin: 0 0 8px 0;
+            background: linear-gradient(135deg, #ffffff 40%, var(--sea-blue) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
         }
 
         p.subtitle {
             color: var(--text-muted);
             margin: 0;
-            font-size: 15px;
-            font-weight: 500;
+            font-size: 14px;
         }
 
-        /* Form Controls */
+        /* Form Grid yang Ringan */
         .form-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 24px;
-            margin-bottom: 24px;
+            gap: 16px;
+            margin-bottom: 20px;
         }
 
         .form-group {
@@ -106,80 +85,69 @@
             flex-direction: column;
         }
 
-        .form-group.full-width {
-            grid-column: span 2;
-        }
-
         label {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             color: var(--sea-blue);
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
         }
 
         input[type="text"], input[type="date"] {
             width: 100%;
-            padding: 16px 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 12px;
+            padding: 14px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
             background: var(--input-bg);
             color: #fff;
-            font-size: 15px;
-            font-weight: 500;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+            font-size: 14px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         input[type="text"]:focus, input[type="date"]:focus {
             outline: none;
             border-color: var(--sea-blue);
-            box-shadow: 0 0 20px rgba(0, 255, 240, 0.2), inset 0 2px 4px rgba(0,0,0,0.1);
-            background: rgba(11, 17, 38, 0.8);
+            box-shadow: 0 0 10px rgba(0, 255, 240, 0.15);
         }
 
         input::placeholder {
-            color: rgba(255, 255, 255, 0.3);
+            color: rgba(255, 255, 255, 0.2);
         }
 
-        /* Beautiful Custom Date Input */
         input[type="date"]::-webkit-calendar-picker-indicator {
-            filter: invert(1) sepia(1) saturate(5) hue-rotate(135deg);
+            filter: invert(1) hue-rotate(135deg);
             cursor: pointer;
         }
 
-        /* Action Buttons */
+        /* Buttons */
         .btn {
             width: 100%;
-            padding: 16px;
+            padding: 14px;
             border: none;
-            border-radius: 12px;
+            border-radius: 10px;
             font-weight: 700;
-            font-size: 16px;
+            font-size: 15px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            gap: 8px;
+            transition: transform 0.1s ease, filter 0.2s ease;
         }
 
         .btn-generate { 
             background: linear-gradient(135deg, var(--sea-blue), var(--neon-purple)); 
-            color: #060913; 
-            box-shadow: 0 8px 25px rgba(0, 255, 240, 0.25);
-            margin-top: 10px;
+            color: #070b19;
+            box-shadow: 0 4px 15px rgba(0, 255, 240, 0.15);
         }
         
         .btn-generate:hover:not(:disabled) {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 30px rgba(0, 255, 240, 0.45);
-            color: #fff;
+            filter: brightness(1.1);
         }
 
         .btn-generate:active:not(:disabled) {
-            transform: translateY(-1px);
+            transform: scale(0.98);
         }
 
         button:disabled { 
@@ -187,27 +155,26 @@
             cursor: not-allowed; 
             color: var(--text-muted) !important;
             box-shadow: none !important;
-            border: 1px solid rgba(255,255,255,0.05);
         }
 
-        /* Loading / Processing Area */
+        /* Loading Area */
         .loading-wrapper {
             display: none;
             text-align: center;
-            margin: 35px 0;
-            padding: 20px;
-            background: rgba(255, 188, 0, 0.03);
-            border-radius: 16px;
-            border: 1px dashed rgba(255, 188, 0, 0.2);
+            margin: 25px 0;
+            padding: 15px;
+            background: rgba(255, 188, 0, 0.02);
+            border-radius: 12px;
+            border: 1px dashed rgba(255, 188, 0, 0.15);
         }
 
         .spinner {
-            width: 44px;
-            height: 44px;
-            border: 4px solid rgba(0, 255, 240, 0.1);
-            border-top: 4px solid var(--sea-blue);
+            width: 36px;
+            height: 36px;
+            border: 3px solid rgba(0, 255, 240, 0.1);
+            border-top: 3px solid var(--sea-blue);
             border-radius: 50%;
-            margin: 0 auto 16px;
+            margin: 0 auto 12px;
             animation: spin 0.8s linear infinite;
         }
 
@@ -219,147 +186,112 @@
         .loading-text {
             color: #ffbc00;
             font-weight: 600;
-            font-size: 15px;
-            letter-spacing: 0.5px;
+            font-size: 14px;
         }
 
-        /* Premium Output Layout */
+        /* Output Area */
         .output-container {
-            margin-top: 45px;
+            margin-top: 30px;
             display: none;
             opacity: 0;
-            transform: translateY(20px);
-        }
-
-        .output-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
+            transform: translateY(15px);
+            will-change: transform, opacity;
         }
 
         #output {
             background: #04060d;
-            border: 1px solid rgba(255,255,255,0.05);
-            border-left: 4px solid var(--sea-blue);
-            padding: 30px;
+            border: 1px solid rgba(255,255,255,0.03);
+            border-left: 3px solid var(--sea-blue);
+            padding: 20px;
             white-space: pre-wrap;
-            border-radius: 12px;
+            border-radius: 10px;
             font-family: 'Courier New', Courier, monospace;
-            font-size: 15px;
-            line-height: 1.8;
+            font-size: 14px;
+            line-height: 1.6;
             color: #e2e8f0;
-            text-align: justify;
-            box-shadow: inset 0 4px 20px rgba(0,0,0,0.8);
-            max-height: 450px;
+            max-height: 350px;
             overflow-y: auto;
-        }
-
-        /* Custom Scrollbar untuk Output */
-        #output::-webkit-scrollbar {
-            width: 8px;
-        }
-        #output::-webkit-scrollbar-track {
-            background: #04060d;
-            border-radius: 12px;
-        }
-        #output::-webkit-scrollbar-thumb {
-            background: rgba(255,255,255,0.1);
-            border-radius: 12px;
-        }
-        #output::-webkit-scrollbar-thumb:hover {
-            background: var(--sea-blue);
         }
 
         .btn-group {
             display: flex;
-            gap: 16px;
-            margin-top: 25px;
+            gap: 12px;
+            margin-top: 20px;
         }
 
-        .btn-copy { background: rgba(46, 204, 113, 0.15); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.3); }
-        .btn-download { background: rgba(52, 152, 219, 0.15); color: #3498db; border: 1px solid rgba(52, 152, 219, 0.3); }
+        .btn-copy { background: rgba(46, 204, 113, 0.1); color: #2ecc71; border: 1px solid rgba(46, 204, 113, 0.2); }
+        .btn-download { background: rgba(52, 152, 219, 0.1); color: #3498db; border: 1px solid rgba(52, 152, 219, 0.2); }
         
-        .btn-copy:hover { background: #2ecc71; color: #fff; box-shadow: 0 8px 20px rgba(46, 204, 113, 0.3); transform: translateY(-2px); }
-        .btn-download:hover { background: #3498db; color: #fff; box-shadow: 0 8px 20px rgba(52, 152, 219, 0.3); transform: translateY(-2px); }
+        .btn-copy:hover { background: #2ecc71; color: #fff; }
+        .btn-download:hover { background: #3498db; color: #fff; }
 
         .pastebin-box {
             display: none;
             opacity: 0;
-            margin-top: 20px;
+            margin-top: 15px;
             text-align: center;
-            background: rgba(0, 255, 240, 0.05);
-            padding: 16px;
-            border-radius: 12px;
-            border: 1px dashed rgba(0, 255, 240, 0.2);
-            font-size: 14px;
+            background: rgba(0, 255, 240, 0.02);
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px dashed rgba(0, 255, 240, 0.15);
+            font-size: 13px;
         }
 
         .pastebin-box a {
             color: var(--sea-blue);
             font-weight: 700;
             text-decoration: none;
-            box-shadow: 0 2px 0 rgba(0, 255, 240, 0.2);
-            transition: all 0.2s;
         }
 
-        .pastebin-box a:hover { text-shadow: 0 0 10px var(--sea-blue); box-shadow: 0 2px 0 var(--sea-blue); }
-
-        /* --- NOTIFIKASI TOAST DENGAN TAMPILAN GLASS --- */
+        /* Toast Notifications (Ringan & Cepat) */
         .toast-container {
             position: fixed;
-            top: 25px;
-            right: 25px;
+            top: 20px;
+            right: 20px;
             z-index: 10000;
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .toast {
-            min-width: 320px;
-            padding: 18px 24px;
-            border-radius: 14px;
+            min-width: 280px;
+            padding: 14px 20px;
+            border-radius: 10px;
             color: #fff;
             font-weight: 600;
-            font-size: 14px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            font-size: 13px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 10px;
             transform: translateX(120%);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            will-change: transform;
         }
 
-        .toast.success { background: rgba(46, 204, 113, 0.85); border: 1px solid rgba(46, 204, 113, 0.5); }
-        .toast.error { background: rgba(231, 76, 60, 0.85); border: 1px solid rgba(231, 76, 60, 0.5); }
-        .toast.info { background: rgba(11, 17, 38, 0.9); border: 1px solid var(--sea-blue); }
+        .toast.success { background: #2ecc71; }
+        .toast.error { background: #e74c3c; }
+        .toast.info { background: #1f293d; border: 1px solid var(--sea-blue); }
 
-        /* Mobile Optimization */
-        @media (max-width: 768px) {
-            body { padding: 20px 10px; }
-            .container { padding: 30px 20px; border-radius: 20px; }
-            .form-grid { grid-template-columns: 1fr; gap: 16px; }
-            .form-group.full-width { grid-column: span 1; }
-            h2 { font-size: 24px; }
-            .btn-group { flex-direction: column; gap: 10px; }
-            .toast-container { right: 15px; left: 15px; top: 15px; }
+        /* Responsive Mobile Layout */
+        @media (max-width: 600px) {
+            .container { padding: 20px 15px; }
+            .form-grid { grid-template-columns: 1fr; gap: 12px; }
+            h2 { font-size: 20px; }
+            .btn-group { flex-direction: column; gap: 8px; }
+            .toast-container { right: 10px; left: 10px; top: 10px; }
             .toast { min-width: auto; }
         }
     </style>
 </head>
 <body>
 
-<div class="ambient-glow"></div>
-
-<!-- Container Toast -->
 <div class="toast-container" id="toastContainer"></div>
 
 <div class="container" id="mainContainer">
     <div class="header-zone">
         <h2>Character Story Generator</h2>
-        <p class="subtitle">Buat alur cerita forum JGRP / SAMP secara instan & profesional</p>
+        <p class="subtitle">Buat alur cerita forum JGRP / SAMP instan & ringan</p>
     </div>
 
     <div class="form-grid">
@@ -380,7 +312,7 @@
 
         <div class="form-group">
             <label for="promptTambahan">Detail Tambahan (Opsional)</label>
-            <input type="text" id="promptTambahan" placeholder="Contoh: Miskin, ahli mekanik, kabur dari utang">
+            <input type="text" id="promptTambahan" placeholder="Contoh: Mekanik montir, miskin">
         </div>
     </div>
     
@@ -390,33 +322,30 @@
     
     <div class="loading-wrapper" id="loadingArea">
         <div class="spinner"></div>
-        <div class="loading-text">MENGHUBUNGKAN KE AI ENGINE... MOHON TUNGGU</div>
+        <div class="loading-text">MENGHUBUNGKAN KE AI ENGINE...</div>
     </div>
 
     <div class="output-container" id="outputContainer">
-        <div class="output-header">
-            <label style="font-size: 14px; font-weight: 700; color: var(--sea-blue); text-transform: uppercase;">Ready to Paste (Format Forum):</label>
-        </div>
+        <label style="font-size: 12px; font-weight: 700; color: var(--sea-blue); display:block; margin-bottom:8px;">FORMAT FORUM JGRP:</label>
         <div id="output"></div>
         
         <div class="btn-group">
-            <button class="btn btn-copy" onclick="copyText()">📋 Copy Story Text</button>
-            <button class="btn btn-download" onclick="downloadTxt()">💾 Download .TXT File</button>
+            <button class="btn btn-copy" onclick="copyText()">📋 Copy Text</button>
+            <button class="btn btn-download" onclick="downloadTxt()">💾 Download .TXT</button>
         </div>
 
         <div class="pastebin-box" id="pastebinBox">
-            Teks tersalin! Langsung drop & buat paste baru di <a href="https://pastebin.com" target="_blank">Pastebin Resmi</a> (Gunakan CTRL + V)
+            Teks disalin! Silakan tempel ke <a href="https://pastebin.com" target="_blank">Pastebin Resmi</a>
         </div>
     </div>
 </div>
 
 <script>
-    // Fade in Container Utama dengan GSAP
+    // Fade in pakai durasi pas & optimalisasi transisi linear/quad
     window.addEventListener('DOMContentLoaded', () => {
-        gsap.to("#mainContainer", { opacity: 1, y: 0, duration: 1, ease: "power4.out" });
+        gsap.to("#mainContainer", { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" });
     });
 
-    // Toast Notification System
     function showNotification(message, type = 'info') {
         const container = document.getElementById('toastContainer');
         const toast = document.createElement('div');
@@ -430,14 +359,14 @@
         toast.innerHTML = `<div>${icon}</div> <div>${message}</div>`;
         container.appendChild(toast);
 
-        // Slide in dari kanan dengan bounce effect cerdas
-        gsap.to(toast, { translateX: '0%', duration: 0.6, ease: "back.out(1.1)" });
+        // Animasi transisi murni tanpa bounce berat agar mulus di HP
+        gsap.to(toast, { translateX: '0%', duration: 0.4, ease: "power2.out" });
 
         setTimeout(() => {
-            gsap.to(toast, { opacity: 0, x: 50, duration: 0.4, ease: "power3.in", onComplete: () => {
+            gsap.to(toast, { opacity: 0, x: 30, duration: 0.3, ease: "power2.in", onComplete: () => {
                 toast.remove();
             }});
-        }, 4500);
+        }, 4000);
     }
 
     async function generateStoryWithAnim() {
@@ -447,7 +376,7 @@
         const infoTambahan = document.getElementById('promptTambahan').value.trim();
 
         if(!fullName || !place || !dateInput) {
-            showNotification("Isi semua kolom wajib sebelum digenerate!", "error");
+            showNotification("Isi semua kolom wajib!", "error");
             return;
         }
 
@@ -465,10 +394,10 @@
         pastebinBox.style.display = 'none';
         btn.disabled = true;
         
-        showNotification("Sedang memproses prompt ke server AI...", "info");
+        showNotification("Mengirim perintah ke AI...", "info");
 
         if(outputContainer.style.display === 'block') {
-            gsap.to(outputContainer, { opacity: 0, y: 15, duration: 0.3, onComplete: () => {
+            gsap.to(outputContainer, { opacity: 0, y: 10, duration: 0.2, onComplete: () => {
                 outputContainer.style.display = 'none';
                 startLoading();
             }});
@@ -478,7 +407,7 @@
 
         function startLoading() {
             loadingArea.style.display = 'block';
-            gsap.fromTo(loadingArea, { opacity: 0, scale: 0.98 }, { opacity: 1, scale: 1, duration: 0.3, ease: "power2.out" });
+            gsap.fromTo(loadingArea, { opacity: 0 }, { opacity: 1, duration: 0.2 });
         }
 
         const promptAI = `Kamu adalah penulis cerita profesional untuk forum GTA SAMP Roleplay (seperti JGRP).
@@ -500,14 +429,14 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     messages: [
-                        { role: "system", content: "Kamu adalah asisten penulis Character Story GTA SAMP yang realistis, logis, dan patuh pada instruksi forum." },
+                        { role: "system", content: "Kamu adalah asisten penulis Character Story GTA SAMP yang realistis." },
                         { role: "user", content: promptAI }
                     ],
                     model: "openai"
                 })
             });
 
-            if (!response.ok) throw new Error("Server gagal merespon.");
+            if (!response.ok) throw new Error("Server sibuk.");
             
             let aiStory = await response.text();
             aiStory = aiStory.replace(/^["'`]|["'`]$/g, '').trim();
@@ -516,17 +445,16 @@
 
             document.getElementById('output').innerText = finalOutput;
             
-            gsap.to(loadingArea, { opacity: 0, duration: 0.3, onComplete: () => {
+            gsap.to(loadingArea, { opacity: 0, duration: 0.2, onComplete: () => {
                 loadingArea.style.display = 'none';
                 outputContainer.style.display = 'block';
-                gsap.fromTo(outputContainer, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" });
+                gsap.fromTo(outputContainer, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3 });
                 outputContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                
-                showNotification("Character Story sukses di-generate!", "success");
+                showNotification("Character Story berhasil dimuat!", "success");
             }});
 
         } catch (error) {
-            showNotification("Gagal memuat cerita: " + error.message, "error");
+            showNotification("Error: " + error.message, "error");
             loadingArea.style.display = 'none';
         } finally {
             btn.disabled = false;
@@ -537,4 +465,28 @@
         const textToCopy = document.getElementById('output').innerText;
         const pastebinBox = document.getElementById('pastebinBox');
         
-        navigator.clipboard.writeText(tex
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            pastebinBox.style.display = 'block';
+            gsap.fromTo(pastebinBox, { opacity: 0 }, { opacity: 1, duration: 0.2 });
+            showNotification("Teks berhasil disalin!", "success");
+        }).catch(() => {
+            showNotification("Gagal menyalin teks.", "error");
+        });
+    }
+
+    function downloadTxt() {
+        const textToCopy = document.getElementById('output').innerText;
+        const name = document.getElementById('charName').value.trim() || "story";
+        const blob = new Blob([textToCopy], { type: "text/plain;charset=utf-8" });
+        const link = document.createElement("a");
+        
+        link.href = URL.createObjectURL(blob);
+        link.download = `${name}_CS.txt`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+        showNotification("File .txt diunduh!", "success");
+    }
+</script>
+
+</body>
+    </html>

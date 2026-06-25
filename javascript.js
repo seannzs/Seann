@@ -186,7 +186,30 @@ async function generateStoryWithAnim() {
     gsap.fromTo(loadingArea, { opacity: 0, y: 10 }, { opacity: 1, y: 0, duration: 0.3, ease: "power2.out" });
     startLoadingPhases();
 
-    const promptAI = `Kamu adalah AI pembuat Character Story profesional untuk forum GTA SAMP JGRP. Buatlah cerita panjang sebanyak 3 paragraf (minimal 350 kata total), ketik dengan rapi, dan berikan awalan 5 spasi/indentasi di setiap awal paragraf. Karakter ini bernama ${fullName.replace('_', ' ')} yang lahir di ${place} pada tanggal ${day}/${month}/${year}. Detail latar belakang tambahan: ${infoTambahan || 'tidak ada'}. Dilarang merespon dalam bentuk struktur objek JSON, keluarkan langsung teks ceritanya saja secara polos tanpa markdown tebal.`;
+    const promptAI = `Kamu adalah AI pembuat Character Story profesional untuk forum GTA SAMP JGRP. Buatlah cerita panjang sebanyak 3 paragraf (minimal 350 kata total), ketik dengan rapi, dan berikan awalan 5 spasi/indentasi di setiap awal paragraf. Karakter ini bernama ${fullName.replace('_', ' ')} yang lahir di ${place} pada tanggal ${day}/${month}/${year}. Detail latar belakang tambahan: ${infoTambahan || 'tidak ada'}. Dilarang merespon dalam bentuk struktur objek JSON, keluarkan langsung teks ceritanya saja secara polos tanpa markdown tebal. rules 
+[•] Umur karakter setidaknya berusia 18 tahun secara IC
+[•] Diawal story wajib memiliki tanggal lahir karakter anda.
+[•] Menggunakan Bahasa Indonesia/Inggris yang baik dan benar sesuai dengan kaidah kepenulisan.
+[•] Menggunakan sudut pandang pihak ketiga, contoh: Ia, Dia, Jhonson, Alexie, Steven
+[•] Menggunakan tanda baca yang tepat serta menggunakan kalimat yang dapat dimengerti.
+[•] Character Story minimal memiliki 4 paragraf dan masing-masing memiliki 4 baris.
+[•] Minimal mempunyai 230-300 kata
+[•] Beri satu baris kosong untuk memisahkan paragraf satu dengan lainnya.
+[•] Tidak memasukkan dialog dalam cerita karakter.
+[•] Penulisan Nama di dalam cerita tidak boleh menggunakan tanda (_), agar terlihat rapih.
+[•] Akhiri setiap paragraf dengan tanda baca (.), Karna banyaknya baris per paragraf dihitung dari kalimat yang diakhiri tanda baca (.).
+[•] Untuk TIME SKIP Itu kami tidak melarang adanya penggunaan TIME SKIP dalam cerita, namun Jangan terlalu jauh TIME SKIP Kalian di cerita, karna itu akan berpengaruh terhadap alur cerita kalian juga, sebab banyak peristiwa peristiwa yang ter Skip.[•] Umur karakter setidaknya berusia 18 tahun secara IC
+[•] Diawal story wajib memiliki tanggal lahir karakter anda.
+[•] Menggunakan Bahasa Indonesia/Inggris yang baik dan benar sesuai dengan kaidah kepenulisan.
+[•] Menggunakan sudut pandang pihak ketiga, contoh: Ia, Dia, Jhonson, Alexie, Steven
+[•] Menggunakan tanda baca yang tepat serta menggunakan kalimat yang dapat dimengerti.
+[•] Character Story minimal memiliki 4 paragraf dan masing-masing memiliki 4 baris.
+[•] Minimal mempunyai 230-300 kata
+[•] Beri satu baris kosong untuk memisahkan paragraf satu dengan lainnya.
+[•] Tidak memasukkan dialog dalam cerita karakter.
+[•] Penulisan Nama di dalam cerita tidak boleh menggunakan tanda (_), agar terlihat rapih.
+[•] Akhiri setiap paragraf dengan tanda baca (.), Karna banyaknya baris per paragraf dihitung dari kalimat yang diakhiri tanda baca (.).
+[•] Untuk TIME SKIP Itu kami tidak melarang adanya penggunaan TIME SKIP dalam cerita, namun Jangan terlalu jauh TIME SKIP Kalian di cerita, karna itu akan berpengaruh terhadap alur cerita kalian juga, sebab banyak peristiwa peristiwa yang ter Skip.`;
 
     try {
         const response = await fetch(`https://text.pollinations.ai/${encodeURIComponent(promptAI)}?model=openai&system=${encodeURIComponent("Keluarkan respon dalam bentuk teks cerita langsung murni bahasa indonesia, dilarang membungkus dengan JSON.")}`);
